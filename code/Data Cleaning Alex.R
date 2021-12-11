@@ -1,14 +1,5 @@
 library(tidyverse)
 
-gradRate <- readxl::read_excel("Stat471-final-project/data/ACC HS Graduation Rate.xlsx")
-
-gradRate_filtered <- gradRate %>% 
-  filter(SUBGROUP_NAME == "All Students") %>% 
-  filter(YEAR == "2019") %>% 
-  filter(COHORT == "Combined") %>% 
-  filter(!grepl("DISTRICT", ENTITY_NAME))
-write.csv(gradRate_filtered, "Stat471-final-project/cleaned data/ACC HS Graduation Rate.csv")
-
 #gave warnings, I'm guessing most of the warnings are because of columns that have no data
 #accountability, gives overall status of school
 accountability <- readxl::read_excel("Stat471-final-project/data/Accountability Status.xlsx")
@@ -17,7 +8,6 @@ accountability_filtered <- accountability %>%
   filter(is.na(OVERRIDE)) %>% #remove values where the status was overriden
   select(-MADE_PROGRESS_FLAG, -CHANGE_STATUS_FLAG, -OVERRIDE)
 write.csv(accountability_filtered, "Stat471-final-project/cleaned data/Accountability.csv")
-
 
 #BOCES is a program of shared educational services provided to school districts 
 #Need index = Need-to-Resource Capacity Category
