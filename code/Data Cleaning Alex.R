@@ -1,5 +1,6 @@
 library(tidyverse)
 
+<<<<<<< HEAD
 gradRate <- readxl::read_excel("Stat471-final-project/data/ACC HS Graduation Rate.xlsx")
 
 gradRate_filtered <- gradRate %>% 
@@ -9,6 +10,8 @@ gradRate_filtered <- gradRate %>%
   filter(!grepl("DISTRICT", ENTITY_NAME))
 #write.csv(gradRate_filtered, "Stat471-final-project/cleaned data/ACC HS Graduation Rate.csv")
 
+=======
+>>>>>>> 3ac6415ade1705f2153dc779c0ce72924834b1af
 #gave warnings, I'm guessing most of the warnings are because of columns that have no data
 #accountability, gives overall status of school
 accountability <- readxl::read_excel("Stat471-final-project/data/Accountability Status.xlsx")
@@ -18,11 +21,16 @@ accountability_filtered <- accountability %>%
   select(ENTITY_CD, OVERALL_STATUS, MADE_PROGRESS)
 #write.csv(accountability_filtered, "Stat471-final-project/cleaned data/Accountability.csv")
 
+<<<<<<< HEAD
 
 #BOCES is a program of shared educational services provided to school districts. Should we keep this???
 #Need index = Need-to-Resource Capacity Category. The need/resource capacity index, a measure of a district's ability to meet the needs of its students with local
 # resources, is the ratio of the estimated poverty percentage1 (expressed in standard score form) to the Combined
 # Wealth Ratio2 (expressed in standard score form).
+=======
+#BOCES is a program of shared educational services provided to school districts 
+#Need index = Need-to-Resource Capacity Category
+>>>>>>> 3ac6415ade1705f2153dc779c0ce72924834b1af
 BOCES <- readxl::read_excel("Stat471-final-project/data/BOCES and N_RC.xlsx")
 BOCES_filtered <- BOCES %>% 
   filter(YEAR == "2019") %>%
