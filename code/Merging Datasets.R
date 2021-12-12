@@ -12,3 +12,25 @@ suspensions <- read_csv("stat-471-final-project/cleaned data/Suspensions.csv") %
   select(c(ENTITY_CD, PER_SUSPENSIONS))
 demographics <- read_csv("stat-471-final-project/cleaned data/Demographics.csv") %>% 
   select(-c(ENTITY_NAME))
+accountability <- read_csv("stat-471-final-project/cleaned data/Accountability.csv") %>% 
+  select(-c(MADE_PROGRESS))
+boces <- read_csv("stat-471-final-project/cleaned data/BOCES.csv") %>% 
+  select(-c(BOCES_CD))
+expenditure <- read_csv("stat-471-final-project/cleaned data/Expenditure.csv")
+inexperience <- read_csv("stat-471-final-project/cleaned data/Inexperience.csv") %>% 
+  select(-c(NUM_TEACH, NUM_PRINC))
+certification <- read_csv("stat-471-final-project/cleaned data/Teachers Teaching Out of Certification.csv")
+
+final_table <- merge(gradRate, attendance, by = "ENTITY_CD", all.y = FALSE)
+final_table <- merge(final_table, reduced_lunch, by = "ENTITY_CD", all.y = FALSE)
+final_table <- merge(final_table, staff, by = "ENTITY_CD", all.y = FALSE)
+final_table <- merge(final_table, suspensions, by = "ENTITY_CD", all.y = FALSE)
+final_table <- merge(final_table, demographics, by = "ENTITY_CD", all.y = FALSE)
+final_table <- merge(final_table, inexperience, by = "ENTITY_CD", all.y = FALSE)
+final_table <- merge(final_table, certification, by = "ENTITY_CD", all.y = FALSE)
+# These tables are missing data
+final_table <- merge(final_table, accountability, by = "ENTITY_CD", all.x = TRUE, all.y = FALSE) 
+final_table <- merge(final_table, boces, by = "ENTITY_CD", all.x = TRUE, all.y = FALSE)
+final_table <- merge(final_table, expenditure, by = "ENTITY_CD", all.x = TRUE, all.y = FALSE)
+write.csv(final_table, "stat-471-final-project/cleaned data/Merged Data.csv", row.names = FALSE)
+
