@@ -32,5 +32,26 @@ final_table <- merge(final_table, certification, by = "ENTITY_CD", all.y = FALSE
 final_table <- merge(final_table, accountability, by = "ENTITY_CD", all.x = TRUE, all.y = FALSE) 
 final_table <- merge(final_table, boces, by = "ENTITY_CD", all.x = TRUE, all.y = FALSE)
 final_table <- merge(final_table, expenditure, by = "ENTITY_CD", all.x = TRUE, all.y = FALSE)
-write.csv(final_table, "stat-471-final-project/cleaned data/Merged Data.csv", row.names = FALSE)
+
+#final tidying, such as replacing NA values
+final_table = final_table %>%
+  filter(GRAD_RATE != "s") %>%
+  filter(ENTITY_CD != "111111111111") %>%
+  mutate(OVERALL_STATUS = replace(OVERALL_STATUS,
+                                  is.na(OVERALL_STATUS),
+                                  "MISSING")) %>%
+  mutate(NEEDS_INDEX = replace(NEEDS_INDEX,
+                                  is.na(NEEDS_INDEX),
+                                  median(NEEDS_INDEX, na.rm = TRUE))) %>%
+  mutate(PUPIL_COUNT_TOT = replace(PUPIL_COUNT_TOT,
+                                  is.na(PUPIL_COUNT_TOT),
+                                  mean(PUPIL_COUNT_TOT, na.rm = TRUE))) %>%
+  mutate(PER_FEDERAL_EXP = replace(PER_FEDERAL_EXP,
+                                   is.na(PER_FEDERAL_EXP),
+                                   mean(PER_FEDERAL_EXP, na.rm = TRUE)))%>%
+  mutate(PER_STATE_LOCAL_EXP = replace(PER_STATE_LOCAL_EXP,
+                                   is.na(PER_STATE_LOCAL_EXP),
+                                   mean(PER_STATE_LOCAL_EXP, na.rm = TRUE)))
+
+write.csv(final_table, "stat-471-final-project/cleaned data/final data/Merged Data.csv", row.names = FALSE)
 

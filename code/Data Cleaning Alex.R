@@ -5,8 +5,9 @@ library(tidyverse)
 accountability <- readxl::read_excel("Stat-471-final-project/data/Accountability Status.xlsx")
 accountability_filtered <- accountability %>% 
   filter(YEAR == "2019") %>%
-  filter(is.na(OVERRIDE)) %>% #remove values where overall status was overriden
-  select(ENTITY_CD, OVERALL_STATUS, MADE_PROGRESS)
+  filter(is.na(OVERRIDE)) %>% #remove values where overall status was overriden 
+  select(ENTITY_CD, OVERALL_STATUS)
+
 write.csv(accountability_filtered, "Stat-471-final-project/cleaned data/Accountability.csv", row.names = FALSE)
 
 
@@ -14,7 +15,7 @@ write.csv(accountability_filtered, "Stat-471-final-project/cleaned data/Accounta
 #Need index = Need-to-Resource Capacity Category. The need/resource capacity index, a measure of a district's ability to meet the needs of its students with local
 # resources, is the ratio of the estimated poverty percentage1 (expressed in standard score form) to the Combined
 # Wealth Ratio2 (expressed in standard score form).
-BOCES <- readxl::read_excel("Stat471-final-project/data/BOCES and N_RC.xlsx")
+BOCES <- readxl::read_excel("Stat-471-final-project/data/BOCES and N_RC.xlsx")
 BOCES_filtered <- BOCES %>% 
   filter(YEAR == "2019") %>%
   select(ENTITY_CD, BOCES_CD, NEEDS_INDEX)
@@ -44,8 +45,3 @@ OOC_filtered <- OOC %>%
   select(ENTITY_CD, PER_OUT_CERT)
 write.csv(OOC_filtered, "Stat-471-final-project/cleaned data/Teachers Teaching Out of Certification.csv", row.names = FALSE)
 
-
-#Questions:
-#Should I keep total number of teachers? 
-#Do we have data on the pupil-teacher ratios for these schools? 
-#We could probably count that using total pupil and total teacher counts. Can also do this for principal to pupil
