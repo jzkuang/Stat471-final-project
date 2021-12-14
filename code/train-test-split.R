@@ -4,6 +4,10 @@ library(tidyverse)
 # read in the cleaned data
 nyschool_data = read_csv("Stat471-final-project/cleaned data/merged data.csv")
 
+nyschool_data = nyschool_data %>%
+  filter(GRAD_RATE != "s") %>%
+  filter(ENTITY_CD != "111111111111")
+
 # split into train and test
 set.seed(5) 
 n = nrow(nyschool_data)
