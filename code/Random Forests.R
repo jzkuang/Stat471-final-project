@@ -45,7 +45,10 @@ plot(rf_fit_tuned) #double check to see if OOB has flattened out (it does!)
 #save the randomforest model
 save(rf_fit_tuned,file = "Stat-471-final-project/results/rf_fit_tuned.RData")
 
-#HOW TO LOAD THE FOREST rf_fit_tuned = get(load("rf_fit_tuned.RData"))
+#HOW TO LOAD THE FOREST: rf_fit_tuned = get(load("Stat-471-final-project/results/rf_fit_tuned.RData"))
 
+#idk how to save variable importance plot
+rf_importance = varImpPlot(rf_fit_tuned, n.var = 10)
+save(rf_importance,file = "Stat-471-final-project/results/rf_importance.png")
 
 
