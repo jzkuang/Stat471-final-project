@@ -1,5 +1,5 @@
 ---
-title: "final-project-report"
+title: "New York School Success"
 author: "Alex Chen and James Kuang"
 date: "12/12/2021"
 output:
@@ -7,44 +7,84 @@ output:
     number_sections: yes
     toc: yes
     toc_depth: '2'
-  html_document:
-    highlight: haddock
-    number_sections: yes
-    theme: lumen
-    toc: no
-    toc_depth: 4
-    toc_float: yes
 urlcolor: blue
 ---
 
 ```{r setup, include=FALSE, message = FALSE}
 options(scipen = 0, digits = 3)  # controls number of significant digits printed
 library(tidyverse)
-library(kableExtra)
+#library(kableExtra)
 ```
+
+\bigskip
+
+The code to reproduce this report is available [on Github](https://github.com/jzkuang/Stat471-final-project).
+
 \newpage
----
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+# Executive Summary
 
-## R Markdown
+# Introduction
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+# Data
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+## Data Sources
 
-```{r cars}
-summary(cars)
-```
+## Data Cleaning
 
-## Including Plots
+\appendix
 
-You can also embed plots, for example:
+# Appendix: Descriptions of features {#appendix}
+Below are the 31 features we used for analysis. Words written in parentheses represent variable names. Unless noted otherwise, all variables are continuous.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
+**Schools**
+- *School Standing*
+  - Overall Status (`OVERALL_STATUS`): The status of the school: Good Standing, Targeted Support and Improvement,
+Comprehensive Support and Improvement, Closing/Closing School. (Categorical variable)
+  - Needs index (`NEEDS_INDEX`): Need-to-Resource Capacity Category. The need-to-resource capacity (N/RC) index is a measure of a district’s ability to meet the needs of its students with local resources.
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+- *Expenditures*
+  - Federal expenditures (`PER_FEDERAL_EXP`): Per pupil expenditures using federal funds
+  - State and local expenditures (`PER_STATE_LOCAL_EXP`): Per pupil expenditures using state and local funds
+
+- *Staff*
+  - Number of teachers (`NUM_TEACH`): Number of teachers as reported in the Student Information Repository
+System (SIRS), used for determining the percent of inexperienced teachers
+  - Number of principals (`NUM_PRINC`): Number of principals as reported in the Student Information Repository
+System (SIRS), used for determining the percent of inexperienced principals
+  - Number of counselors (`NUM_COUNSELORS`): Total number of school counselors
+  - Number of social workers (`NUM_SOCIAL`): Total number of social workers
+  - Percent teacher inexperience (`PER_TEACH_INEXP`): Percent of teachers with fewer than four years of experience in their
+positions
+  - Percent principal inexperience (`PER_PRINC_INEXP`): Percent of principals with fewer than four years of experience in their
+positions
+  - Teachers teaching out of certification (`PER_OUT_CERT`): Percent of teachers teaching out of their subject/field of
+certification
+
+**Students**
+- *Characteristics*
+  - Attendance rate (`ATTENDANCE_RATE`): Annual attendance rate
+  - Percent suspended (`PER_SUSPENSIONS`): Percent of students suspended
+  - Percent reduced lunch (`PER_REDUCED_LUNCH`): Percentage of enrolled students eligible for reduced-price lunch
+  - Percent free lunch (`PER_FREE_LUNCH`): Percentage of enrolled students eligible for free lunch
+- *Demographics*
+  - Percent female (`PER_FEMALE`): Percent of female students (K-12)
+  - Percent male (`PER_MALE`): Percent of male students (K-12)
+  - Percent American Indian (`PER_AM_IND`): Percent of American Indian or Alaska Native students (K-12)
+  - Percent Black (`PER_BLACK`): Percent of Black or African American students (K-12)
+  - Percent Asian (`PER_ASIAN`): Percent of Asian or Native Hawaiian/Other Pacific Islander students (K-12)
+  - Percent Hispanic (`PER_HISP`): Percent of Hispanic or Latino students (K-12)
+  - Percent White (`PER_WHITE`): Percent of White students (K-12)
+  - Percent Multi (`PER_MULTI`): Percent of Multiracial students (K-12)
+  - Percent English language learners (`PER_ELL`): Percent of English Language Learners (K-12)
+  - Percent with disabilities (`PER_SWD`): Percent of students with disabilities (K-12)
+  - Percent economically disadvantaged (`PER_ECDIS`): Percent of economically disadvantaged students (K-12)
+  - Percent migrants (`PER_MIGRANT`): Percentage of migrant students (K-12)
+  - Percent homeless (`PER_HOMELESS`): Percent of homeless students (K-12)
+  - Percent foster care (`PER_FOSTER`): Percent of students in foster care (K-12)
+  - Percent parent armed forces (`PER_ARMED`): Percent of students with a parent on active duty in the Armed Forces (K-12)
+
+  
+
+
+
