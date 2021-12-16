@@ -7,7 +7,6 @@ nyschool_train = read_csv("Stat-471-final-project/cleaned data/final data/nyscho
 
 set.seed(1)
 rf_fit = randomForest(GRAD_RATE ~ . -ENTITY_CD -INSTITUTION_ID -ENTITY_NAME, data = nyschool_train)
-
 #plot OOB error as a function of number of trees
 plot(rf_fit)
 
@@ -29,11 +28,14 @@ rf_tuning = m_oob_errors%>%
   theme_bw() 
 
 #saving the tuning for m
-pdf("Stat-471-final-project/results/rf_tuning.png")
+png(width = 6, 
+    height = 4,
+    res = 300,
+    units = "in", 
+    filename = "Stat-471-final-project/results/rf_tuning.png")
 print(rf_tuning)
 dev.off()
 
-#m = 9 is the best mtry value, which is lower than default m = 10
 best_m = m_oob_errors %>%
   arrange(oob_errors) %>% head(1) %>% pull(m)
 
@@ -47,8 +49,13 @@ save(rf_fit_tuned,file = "Stat-471-final-project/results/rf_fit_tuned.RData")
 
 #HOW TO LOAD THE FOREST: rf_fit_tuned = get(load("Stat-471-final-project/results/rf_fit_tuned.RData"))
 
-#idk how to save variable importance plot
-rf_importance = varImpPlot(rf_fit_tuned, n.var = 10)
-save(rf_importance,file = "Stat-471-final-project/results/rf_importance.png")
+#save the variable importance plot
+png(width = 9, 
+    height = 7,
+    res = 300,
+    units = "in", 
+    filename = "Stat-471-final-project/results/rf_importance.png")
+print(varImpPlot(rf_fit_tuned, n.var = 10))
+dev.off()
 
 
