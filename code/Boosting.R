@@ -40,7 +40,7 @@ cv_errors = bind_rows(
   tibble(ntree = 1:ntrees, cv_err = gbm_fit_3$cv.error, depth = 3)
 )
 # plot CV errors
-cv_errors %>%
+cv_error_plot = cv_errors %>%
   ggplot(aes(x = ntree, y = cv_err, colour = factor(depth))) +
   # add horizontal dashed lines at the minima of the three curves
   geom_hline(yintercept = min(gbm_fit_1$cv.error),
@@ -57,12 +57,26 @@ cv_errors %>%
   scale_y_log10() +
   theme_bw()
 
+#save the CV error plot
+png(width = 6, 
+    height = 4,
+    res = 300,
+    units = "in", 
+    filename = "Stat-471-final-project/results/boost_cv_error.png")
+print(cv_error_plot)
+dev.off()
+
+
 #we see interaction depth 2 is the best, so extract its optimal ntrees
 gbm_fit_tuned = gbm_fit_2
 optimal_num_trees = gbm.perf(gbm_fit_2, plot.it = FALSE)
 optimal_num_trees
 
-#table of variable importance
+#Save table of variable importance
 boost_importance = summary(gbm_fit_tuned, n.trees = optimal_num_trees, plotit = FALSE) %>%
   head(10)
+boost_importance %>% write_tsv("Stat-471-final-project/results/boost_importance.tsv")
+
+#save tuned boosting model
+save(gbm_fit_tuned,file = "Stat-471-final-project/results/gbm_fit_tuned.RData")
 
