@@ -1,7 +1,6 @@
 library(glmnetUtils)
 library(tidyverse)
 
-
 source("Stat-471-final-project/code/functions/plot_glmnet.R")
 
 # read in the cleaned data
@@ -10,17 +9,34 @@ nyschool_train = read_csv("Stat-471-final-project/cleaned data/final data/nyscho
   mutate(OVERALL_STATUS = as.factor(OVERALL_STATUS))
 dummified_train <- as.data.frame(model.matrix( ~ .-1, nyschool_train))
 
-# The Regression
+#### The Regression ####
 set.seed(1)
 ridge_fit = cv.glmnet(GRAD_RATE ~ ., # formula notation, as usual
                       alpha = 0, # alpha = 0 for ridge
                       nfolds = 10, # number of folds
                       data = dummified_train) # data to run ridge on
 
-plot(ridge_fit)
-coef <- coef(ridge_fit, s = "lambda.1se")
+## Plots
+#saving the tuning for m
+png(width = 6, 
+    height = 4,
+    res = 300,
+    units = "in", 
+    filename = "Stat-471-final-project/results/lr_tuning.png")
+lr_tuning <- plot(ridge_fit)
+print(lr_tuning)
+dev.off()
+
+png(width = 9, 
+    height = 7,
+    res = 300,
+    units = "in", 
+    filename = "Stat-471-final-project/results/lr_tuning.png")
 plot_glmnet(ridge_fit, nyschool_train, features_to_plot = 7)
 
+coef <- coef(ridge_fit, s = "lambda.1se")
+
+#### Check the MSE ####
 nyschool_test = read_csv("Stat-471-final-project/cleaned data/final data/nyschool_test.csv") %>% 
   select(-c(ENTITY_CD, INSTITUTION_ID, ENTITY_NAME))
 # this is a list of levels for each factor in the original df
