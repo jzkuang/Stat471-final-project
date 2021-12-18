@@ -23,20 +23,20 @@ png(width = 6,
     res = 300,
     units = "in", 
     filename = "Stat-471-final-project/results/lr_tuning.png")
-lr_tuning <- plot(ridge_fit)
-print(lr_tuning)
+print(plot(ridge_fit))
 dev.off()
 
 png(width = 9, 
     height = 7,
     res = 300,
     units = "in", 
-    filename = "Stat-471-final-project/results/lr_tuning.png")
-plot_glmnet(ridge_fit, nyschool_train, features_to_plot = 7)
+    filename = "Stat-471-final-project/results/lr_features.png")
+print(plot_glmnet(ridge_fit, nyschool_train, features_to_plot = 7))
+dev.off()
 
 coef <- coef(ridge_fit, s = "lambda.1se")
 
-#### Check the MSE ####
+#### Check the MSE for Training ####
 nyschool_test = read_csv("Stat-471-final-project/cleaned data/final data/nyschool_test.csv") %>% 
   select(-c(ENTITY_CD, INSTITUTION_ID, ENTITY_NAME))
 # this is a list of levels for each factor in the original df
