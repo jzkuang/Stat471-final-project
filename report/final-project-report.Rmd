@@ -1,19 +1,26 @@
 ---
-title: "New York School Success"
-author: "Alex Chen and James Kuang"
-date: "12/12/2021"
+title: 'New York School Success'
+author: 'Alex Chen and James Kuang'
+date: '12/12/21'
 output:
   bookdown::pdf_document2:
     number_sections: yes
     toc: yes
     toc_depth: '2'
+  html_document:
+    highlight: haddock
+    number_sections: yes
+    theme: lumen
+    toc: no
+    toc_depth: 4
+    toc_float: yes
 urlcolor: blue
 ---
 
-```{r setup, include=FALSE, message = FALSE}
+```{r setup, include=FALSE}
 options(scipen = 0, digits = 3)  # controls number of significant digits printed
 library(tidyverse)
-#library(kableExtra)
+library(kableExtra)
 ```
 
 \bigskip
@@ -85,6 +92,3 @@ certification
   - Percent parent armed forces (`PER_ARMED`): Percent of students with a parent on active duty in the Armed Forces (K-12)
 
   
-
-
-
