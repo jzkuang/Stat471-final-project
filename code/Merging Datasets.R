@@ -42,7 +42,7 @@ final_table = final_table %>%
                                   "MISSING")) %>%
   mutate(NEEDS_INDEX = replace(NEEDS_INDEX,
                                   is.na(NEEDS_INDEX),
-                                  median(NEEDS_INDEX, na.rm = TRUE))) %>%
+                                  "MISSING")) %>%
   mutate(PUPIL_COUNT_TOT = replace(PUPIL_COUNT_TOT,
                                   is.na(PUPIL_COUNT_TOT),
                                   mean(PUPIL_COUNT_TOT, na.rm = TRUE))) %>%
