@@ -32,7 +32,7 @@ training %>%
   as.data.frame() %>% 
   select(GRAD_RATE) %>% 
   arrange(desc(abs(GRAD_RATE))) %>% 
-  slice(-1)
+  slice(2:11)
 
 # Top 10 Lowest Graduation Rate
 training %>% 

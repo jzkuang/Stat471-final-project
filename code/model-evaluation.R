@@ -16,7 +16,7 @@ load("Stat-471-final-project/results/ridge_fit.RData")
 load("Stat-471-final-project/results/rf_fit_tuned.RData")
 load("Stat-471-final-project/results/gbm_fit_tuned.RData")
 
-#evaluate the linear regression
+#evaluate the lienar regression
 nyschool_test_lr = read_csv("Stat-471-final-project/cleaned data/final data/nyschool_test.csv") %>% 
   select(-c(ENTITY_CD, INSTITUTION_ID, ENTITY_NAME))
 # this is a list of levels for each factor in the original df
