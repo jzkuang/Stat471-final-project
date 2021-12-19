@@ -13,7 +13,7 @@ sd(training$GRAD_RATE)
 dist_grad <- ggplot(training) +
   geom_histogram(aes(x = GRAD_RATE)) +
   theme_bw() +
-  labs(x = "Graduation Rate", y = "Count")
+  labs(x = "Graduation Rate (Percent)", y = "Count")
 png(width = 6, 
     height = 4,
     res = 300,
