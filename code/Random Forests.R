@@ -7,7 +7,7 @@ nyschool_train = read_csv("Stat-471-final-project/cleaned data/final data/nyscho
 
 set.seed(1)
 rf_fit = randomForest(GRAD_RATE ~ . -ENTITY_CD -INSTITUTION_ID -ENTITY_NAME, data = nyschool_train)
-#plot OOB error as a function of number of trees
+#plot OOB error as a function of number of trees. Check to see where OOB is stabilized
 plot(rf_fit)
 
 #tuning the random forest
@@ -28,8 +28,8 @@ rf_tuning = m_oob_errors%>%
   theme_bw() 
 
 #saving the tuning for m
-png(width = 6, 
-    height = 4,
+png(width = 5, 
+    height = 3,
     res = 300,
     units = "in", 
     filename = "Stat-471-final-project/results/rf_tuning.png")
@@ -57,5 +57,10 @@ png(width = 8,
     filename = "Stat-471-final-project/results/rf_importance.png")
 print(varImpPlot(rf_fit_tuned, n.var = 10))
 dev.off()
+
+data_importance = nyschool_data %>% 
+  select(GRAD_RATE, PER_ELL, PER_SWD) %>% 
+  arrange(GRAD_RATE) %>% head(5) %>% 
+  write_tsv("Stat-471-final-project/results/data_importance.tsv")
 
 

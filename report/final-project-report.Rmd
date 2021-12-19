@@ -138,10 +138,31 @@ knitr::include_graphics("../results/rf_importance.png")
 ```
 Then, we calculate the levels of variable importance using the tuned random forest as shown in Figure \@ref(fig:rfimportance). The clear most important variable in this random forest is the attendance rate of students at the school. This variable has a much higher value than the rest on both measures of importance, indicating that it is incredibly important to the model and calculating graduation rates. This makes sense because attendance is important to doing well in school, so schools with higher attendance rates tended to have more students perform better and graduate.
 
-For the OOB prediction based importance, the top three measures were attendance rate, overall status of the school, and the percent of the students that were Asian. Although not as importance as attendance rate, overall status and percent Asian also make sense when determining graduation rates. If the school is in good standing, then we would expect it to have higher graduation rates. Also, Asians are known to prioritize school and studying, which means that schools with higher percent Asians will have a slight boost in graduation rates. For the purity based importance, we also see percent of students with free lunch and percent students with disabilities being important. In contrast to the others, a higher value in these categories might represent lower income areas, which might lead to lower resources in the school and lower graduation rates. Overall, these values do make intuitive sense as to why they might be predictive of graduation rates.
+For the both importance measures, the top three measures were attendance rate, percent of English language learners, and percent of students with disabilities. Although not as important as attendance rate, the other two variables are indicative of graduation rate. It's not clear how these variables might impact graduation rate, so We extracted the five lowest graduation rates and their respective percents in Table \@ref(tab:lowgrad). It appears that low graduation rates correspond to higher percents of English language learners and students with disabilities. However, the correlation between these two variables and graduation rate isn't incredibly strong and this table does not provide the best explanation due to other factors that contribute to the school's graduation rate, which the table omits.
+
+It might make sense that the percent of students with disabilities might be indicative of graduation rates because more students with disabilities might signal a lower socio-economic area, meaning that the school would have less funding and overall worse graduation rates. Higher percentages of English language learners might also be indicative of low graduation rates because the student ELL might struggle more with learning in English as a whole because they struggle with the language. 
+
+```{r lowgrad, echo=FALSE}
+read_tsv("../results/data_importance.tsv") %>%
+  kable(format = "latex", row.names = NA, 
+        booktabs = TRUE, digits = 2, 
+        col.names = c("Graduation Rate", "Percent ELL", "Percent SWD"),
+        caption = "The 5 lowest graduation rates and their percent English 
+        language learners (ELL) and their percent students with disabilities 
+        (SWD).") %>%
+  kable_styling(position = "center")
+```
 
 ### Boosting
 Boosting (gradient boosting) is another powerful tree-based method that we will be building based on these New York high schools graduation rates. This method is known for building great models and models that are better than even random forests. It also works well with continuous response variables, such as the graduation rate in our case. The model also reveals which variables are most important in determining graduation rate, as well as partial dependence plots to go alongside. So, we use boosting in order to build a model that will have great predictive power for graduation rates and will also highlight the important variables that we must consider. 
+
+```{r gbmtune, fig.cap = "The cross-validation error is plotted against the number of trees for the gradient boosting method.", fig.align='center', echo = FALSE}
+knitr::include_graphics("../results/gbm_cv_error.png")
+```
+
+We tune the boosting model by using different interaction depths for the model, 1, 2, and 3, by plotting cross-validation error against the number of trees. We then choose the model with the lowest minimum CV error, which is the interaction depth of 2. Then, we use that point to identify the minimum number of trees, which is 135 trees. The plot to identify these values can be found in Figure \@ref(fig:gbmtune).
+
+With these two tuned parameters, we build a strong predictive model using the gradient boosting method.
 
 
 

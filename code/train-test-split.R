@@ -15,3 +15,7 @@ nyschool_test = nyschool_data[-train_samples,]
 # save the train and test data
 write_csv(nyschool_train, file = "Stat-471-final-project/cleaned data/final data/nyschool_train.csv")
 write_csv(nyschool_test, file = "Stat-471-final-project/cleaned data/final data/nyschool_test.csv")
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8c1418311027380f7e1fb8c08c46bedf70da2193
