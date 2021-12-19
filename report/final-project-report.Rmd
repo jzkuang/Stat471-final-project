@@ -138,18 +138,19 @@ knitr::include_graphics("../results/rf_importance.png")
 ```
 Then, we calculate the levels of variable importance using the tuned random forest as shown in Figure \@ref(fig:rfimportance). The clear most important variable in this random forest is the attendance rate of students at the school. This variable has a much higher value than the rest on both measures of importance, indicating that it is incredibly important to the model and calculating graduation rates. This makes sense because attendance is important to doing well in school, so schools with higher attendance rates tended to have more students perform better and graduate.
 
-For the both importance measures, the top three measures were attendance rate, percent of English language learners, and percent of students with disabilities. Although not as important as attendance rate, the other two variables are indicative of graduation rate. It's not clear how these variables might impact graduation rate, so We extracted the five lowest graduation rates and their respective percents in Table \@ref(tab:lowgrad). It appears that low graduation rates correspond to higher percents of English language learners and students with disabilities. However, the correlation between these two variables and graduation rate isn't incredibly strong and this table does not provide the best explanation due to other factors that contribute to the school's graduation rate, which the table omits.
+For the the OOB prediction based importance, the top three measures were attendance rate, total pupil count, and percent of students with disabilities. For the purity based importance, the top three were attendance rate, percent free lunch, and percent students with disabilities. Although not as important as attendance rate, the other three variables we see are indicative of graduation rate. It's not clear how these variables might impact graduation rate, so We extracted the five lowest graduation rates and their respective variables in Table \@ref(tab:lowgrad). It appears that low graduation rates correspond to lower total pupil counts, higher percent of students with disabilities, and higher percent with free lunch. However, the correlation between these variables and graduation rate isn't incredibly strong and this table does not provide the best explanation due to other factors that contribute to the school's graduation rate, which the table omits. Still, this table can shine some light into how these important variables might impact the graduation rate.
 
-It might make sense that the percent of students with disabilities might be indicative of graduation rates because more students with disabilities might signal a lower socio-economic area, meaning that the school would have less funding and overall worse graduation rates. Higher percentages of English language learners might also be indicative of low graduation rates because the student ELL might struggle more with learning in English as a whole because they struggle with the language. 
+It might make sense that the percent of students with disabilities might be indicative of graduation rates because more students with disabilities might signal a lower socio-economic area, meaning that the school would have less funding and overall worse graduation rates. Similarly, higher percentages of students with free lunch might also be indicative of low graduation rates because of the overlying factors of lower economic status. 
 
 ```{r lowgrad, message = FALSE, echo=FALSE}
 read_tsv("../results/data_importance.tsv") %>%
   kable(format = "latex", row.names = NA, 
         booktabs = TRUE, digits = 2, 
-        col.names = c("Graduation Rate", "Percent ELL", "Percent SWD"),
-        caption = "The 5 lowest graduation rates and their percent English 
-        language learners (ELL) and their percent students with disabilities 
-        (SWD).") %>%
+        col.names = c("Graduation Rate", "Total Pupil Count", 
+                      "Percent SWD", "Percent Free Lunch"),
+        caption = "The 5 lowest graduation rates and their total pupil count, 
+        their percent students with disabilities (SWD), and their percent 
+        students with free lunch.") %>%
   kable_styling(position = "center")
 ```
 

@@ -59,7 +59,7 @@ print(varImpPlot(rf_fit_tuned, n.var = 10))
 dev.off()
 
 data_importance = nyschool_data %>% 
-  select(GRAD_RATE, PER_ELL, PER_SWD) %>% 
+  select(GRAD_RATE, PUPIL_COUNT_TOT, PER_SWD, PER_FREE_LUNCH) %>% 
   arrange(GRAD_RATE) %>% head(5) %>% 
   write_tsv("Stat-471-final-project/results/data_importance.tsv")
 
