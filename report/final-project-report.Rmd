@@ -21,6 +21,9 @@ urlcolor: blue
 options(scipen = 0, digits = 3)  # controls number of significant digits printed
 library(tidyverse)
 library(kableExtra)
+full_data <- read_csv("../cleaned data/final data/merged data.csv") 
+training <- read_csv("../cleaned data/final data/nyschool_train.csv") %>% 
+  select(-c(ENTITY_CD, ENTITY_NAME, INSTITUTION_ID))
 ```
 
 \bigskip
@@ -78,11 +81,37 @@ Drawing on data from the New York State's Department of Education, we included 3
 
 ## Data Allocation
 
-We used an 80-20 train-test split for our analysis. 
+We used an 80-20 train-test split for our modeling. 
 
 ## Data Exploration
 
+### Response
 
+```{r eda-gr-hist, fig.width = 4, fig.height= 3, out.width= "60%", fig.align= 'center', fig.cap="Distribution of the Graduation Rate", fig.pos="h", echo=FALSE}
+knitr::include_graphics("../results/eda_grad_hist.png")
+```
+
+The first thing that our team wanted to explore is the response variable, i.e. graduation rate. To that end, we produced a histogram out of our data's training rate (Figure \@ref(fig:eda-gr-hist)). From the histogram, we can see that the data is negatively skewed. Most high schools have an above 75% graduation rate, but there are a few schools that are very poor performers. The mean graduation rate for the training data is `r mean(training$grad_rate)`, and the standard deviation of the graduation rate is `r sd(training$grad_rate)`. 
+
+```{r worst-schools, echo=FALSE}
+# Which schools are the lowest?
+full_data %>% 
+  select(ENTITY_NAME, GRAD_RATE) %>% 
+  arrange(GRAD_RATE) %>% 
+  slice(1:15) %>% 
+  rename(
+    "School" = ENTITY_NAME,
+    "Graduation Rate (Percent)" = GRAD_RATE
+  ) %>% 
+  kable(format = "latex", row.names = NA,
+      booktabs = TRUE, digits = 2,
+      caption = "The Worst Performing Schools") %>%
+  kable_styling(position = "center", latex_options = "HOLD_position")
+```
+
+Table \@ref(tab:worst-schools) shows us the fifteen schools with the worst graduation rates. The schools are a motley mix from across the state. However, Brooklyn and Bronx stand out as a district with the most schools on this list. This isn't unexpected given that NYC and the state tend to under invest in those areas.
+
+### Features
 
 # Modeling
 
