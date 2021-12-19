@@ -1,6 +1,7 @@
 #Boosting model
 library(gbm)       
 library(tidyverse)
+library(cowplot)
 
 # read in the cleaned data
 nyschool_train = read_csv("Stat-471-final-project/cleaned data/final data/nyschool_train.csv") 
@@ -79,4 +80,18 @@ boost_importance %>% write_tsv("Stat-471-final-project/results/gbm_importance.ts
 
 #save tuned boosting model
 save(gbm_fit_tuned,file = "Stat-471-final-project/results/gbm_fit_tuned.RData")
+
+#partial dependence plots
+attend_importance = plot(gbm_fit_tuned, i.var = "ATTENDANCE_RATE", n.trees = optimal_num_trees)
+pupil_importance = plot(gbm_fit_tuned, i.var = "PUPIL_COUNT_TOT", n.trees = optimal_num_trees)
+freelunch_importance = plot(gbm_fit_tuned, i.var = "PER_FREE_LUNCH", n.trees = optimal_num_trees)
+
+partial_dependence = plot_grid(attend_importance, pupil_importance, freelunch_importance, align = "h")
+png(width = 6, 
+    height = 4,
+    res = 300,
+    units = "in", 
+    filename = "Stat-471-final-project/results/partial_dependence.png")
+print(partial_dependence)
+dev.off()
 
