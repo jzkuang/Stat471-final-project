@@ -54,15 +54,31 @@ These large disparities in graduation rates should be a concern within education
 
 ## Data Sources
 
-Our data set is a combination of several publicly available data sets from the New York State Education Department's website (data.nysed.gov). Given our purpose, we decided on the Student and Educator Database, the Enrollment Database, and the Report Card Databases for the 2019-2020 school year. These data sets are centered around proving information about the ~1300 high schools as well as a scattering of schools serving other grade levels in the state of New York. This data is collected by the state specifically for parents and, thus, is focused towards featuring data points, such as class size and budget, that would be of interest to parents.
+Our dataset is a combination of several publicly available datasets from the New York State Education Department's website (data.nysed.gov). Given our purpose, we decided on the Student and Educator Database, the Enrollment Database, and the Report Card Databases for the 2019-2020 school year. These datasets are centered around proving information about the ~1300 high schools as well as a scattering of schools serving other grade levels in the state of New York. This data is collected by the state specifically for parents and, thus, is focused towards featuring data points, such as class size and budget, that would be of interest to parents.
 
-The first data set, the Student and Educator Database, possesses information on the number of each staff, the attendance rate, the suspension rate, and the percentage of free/reduced price lunch students. The second data set, the Enrollment Database, has demographic data for each school. For example, this data set lists the percentage of parents whose parents are in the armed forces. The final data set, the Report Card Database, hosts information on the number of teachers out of certification or inexperienced, fiscal data concerning school budgets, the status of each school, and, most importantly, graduation rate which is our response variable.
+The first dataset, the Student and Educator Database, possesses information on the number of each staff, the attendance rate, the suspension rate, and the percentage of free/reduced price lunch students. The second dataset, the Enrollment Database, has demographic data for each school. For example, this dataset lists the percentage of parents whose parents are in the armed forces. The final dataset, the Report Card Database, hosts information on the number of teachers out of certification or inexperienced, fiscal data concerning school budgets, the status of each school, and, most importantly, graduation rate which is our response variable.
 
 ## Data Cleaning
 
-We downloaded the data from the data.nysed.gov, but it came in the form Microsoft Access Databases. We manually had to extract the data into excel files preserving column names. On the extracted data, we filtered for data only from 2019. The team made this choice after noticing that much of the 2020 data was incomplete, likely an artifact of delays on the end of NYSED. There were also several columns that were missing most if not all of their data. We decided to also remove those features. Further, some data sets had data for each demographic group within the school in addition to numbers for the entire student body. As this was only present in some of the data, we decided to use only observations for entire school bodies. Once we had filtered the data, we merged them together using the Entity_CD identifier.
+We downloaded the data from the data.nysed.gov, but it came in the form Microsoft Access Databases. We manually had to extract the data into excel files preserving column names. On the extracted data, we filtered for data only from 2019. The team made this choice after noticing that much of the 2020 data was incomplete, likely an artifact of delays on the end of NYSED. There were also several columns that were missing most if not all of their data. We decided to also remove those features. Further, some datasets had data for each demographic group within the school in addition to numbers for the entire student body. As this was only present in some of the data, we decided to use only observations for entire school bodies. Some observations were also for broader entities than a single school, such as a county school district, and was similarly removed. Once we had filtered the data, we merged them together using the Entity_CD (a code for schools) identifier. However, there were a scattering of NA/missing values that still needed to be dealt with. First, we, through a combination of prudent use of left merging and filtering, preserved only data with a reported graduation rate. Second, we imputed missing values for the total count of pupils, the percentage of federal expenditures, and percentage of state/local expenditures for a school using the mean. 
 
 ## Data Description
+
+### Observations
+
+Our dataset was comprised of 1201 observations, each corresponding to a high school in New York State during the year of 2019.
+
+### Response Variable
+
+Our response variable is the graduation rate for each of our schools.
+
+### Features
+
+Drawing on data from the New York State's Department of Education, we included 31 variables in our analysis. These variables can be separated into two broad categories: features involving the school and features involving students. The school features can be further subdivided into school standing, expenditure related, and staff count variable groups, while the student features can be subdivided into characteristic and demographic features. All of the variables are numeric except for Overall Status and Needs Index. For a detailed specification of each variable, refer to Appendix \@ref(appendix).
+
+## Data Allocation
+
+We used an 80-20 train-test split for our analysis. 
 
 ## Data Exploration
 
@@ -124,7 +140,7 @@ Below are the 31 features we used for analysis. Words written in parentheses rep
 - *School Standing*
   - Overall Status (`OVERALL_STATUS`): The status of the school: Good Standing, Targeted Support and Improvement,
 Comprehensive Support and Improvement, Closing/Closing School. (Categorical variable)
-  - Needs index (`NEEDS_INDEX`): Need-to-Resource Capacity Category. The need-to-resource capacity (N/RC) index is a measure of a district’s ability to meet the needs of its students with local resources.
+  - Needs index (`NEEDS_INDEX`): Need-to-Resource Capacity Category. The need-to-resource capacity (N/RC) index is a measure of a district’s ability to meet the needs of its students with local resources. (Categorical variable)
 
 - *Expenditures*
   - Federal expenditures (`PER_FEDERAL_EXP`): Per pupil expenditures using federal funds
