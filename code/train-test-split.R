@@ -15,5 +15,3 @@ nyschool_test = nyschool_data[-train_samples,]
 # save the train and test data
 write_csv(nyschool_train, file = "Stat-471-final-project/cleaned data/final data/nyschool_train.csv")
 write_csv(nyschool_test, file = "Stat-471-final-project/cleaned data/final data/nyschool_test.csv")
-
-write_csv(nyschool_test, file = "Stat-471-final-project/cleaned data/final data/nyschool_train.csv")
