@@ -131,7 +131,7 @@ Moreover, there are methods of tuning the random forest to build better random f
 knitr::include_graphics("../results/rf_tuning.png")
 ```
 
-We tuned our random forest models based on variable m: the subset of features at each split point of the tree. By tuning against out-of-bag error, we determine an optimal m-value, as shown in Figure \@ref(fig:rftuning). The value that minimized the OOB error was 21, which is much higher than the default m value of 10. With this tuned parameter, we are able to build a better random forest, and this random forest when checked against number of trees to ensure had an out-of-bag error that was stabilized. 
+We tuned our random forest models based on variable m: the subset of features at each split point of the tree. By tuning against out-of-bag error, we determine an optimal m-value, as shown in Figure \@ref(fig:rftuning). The value that minimized the OOB error was 1, which is slightly higher than the default m value of 10. With this tuned parameter, we are able to build a better random forest, and this random forest when checked against number of trees to ensure had an out-of-bag error that was stabilized. 
 
 ```{r rfimportance, fig.cap = "Plot of the variable importance using the purity based importance (on the right) and the OOB prediction based importance (on the left).", fig.align='center', echo = FALSE}
 knitr::include_graphics("../results/rf_importance.png")
@@ -142,7 +142,7 @@ For the both importance measures, the top three measures were attendance rate, p
 
 It might make sense that the percent of students with disabilities might be indicative of graduation rates because more students with disabilities might signal a lower socio-economic area, meaning that the school would have less funding and overall worse graduation rates. Higher percentages of English language learners might also be indicative of low graduation rates because the student ELL might struggle more with learning in English as a whole because they struggle with the language. 
 
-```{r lowgrad, echo=FALSE}
+```{r lowgrad, message = FALSE, echo=FALSE}
 read_tsv("../results/data_importance.tsv") %>%
   kable(format = "latex", row.names = NA, 
         booktabs = TRUE, digits = 2, 
@@ -160,9 +160,7 @@ Boosting (gradient boosting) is another powerful tree-based method that we will 
 knitr::include_graphics("../results/gbm_cv_error.png")
 ```
 
-We tune the boosting model by using different interaction depths for the model, 1, 2, and 3, by plotting cross-validation error against the number of trees. We then choose the model with the lowest minimum CV error, which is the interaction depth of 2. Then, we use that point to identify the minimum number of trees, which is 135 trees. The plot to identify these values can be found in Figure \@ref(fig:gbmtune).
-
-With these two tuned parameters, we build a strong predictive model using the gradient boosting method.
+We tune the boosting model by using different interaction depths for the model, 1, 2, and 3, by plotting cross-validation error against the number of trees. We then choose the model with the lowest minimum CV error, which is the interaction depth of 2. Then, we use that point to identify the minimum number of trees, which is 135 trees. The plot to identify these values can be found in Figure \@ref(fig:gbmtune). With these two tuned parameters, we build a strong predictive model using the gradient boosting method.
 
 
 
