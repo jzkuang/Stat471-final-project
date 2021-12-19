@@ -8,7 +8,8 @@ library(gbm)
 #load test data
 nyschool_train = read_csv("Stat-471-final-project/cleaned data/final data/nyschool_train.csv") %>% 
   select(-c(ENTITY_CD, INSTITUTION_ID, ENTITY_NAME)) %>% 
-  mutate(OVERALL_STATUS = as.factor(OVERALL_STATUS))
+  mutate(OVERALL_STATUS = as.factor(OVERALL_STATUS),
+         NEEDS_INDEX = as.factor(NEEDS_INDEX))
 nyschool_test = read_csv("Stat-471-final-project/cleaned data/final data/nyschool_test.csv")
 
 #load models
@@ -18,7 +19,9 @@ load("Stat-471-final-project/results/gbm_fit_tuned.RData")
 
 #evaluate the lienar regression
 nyschool_test_lr = read_csv("Stat-471-final-project/cleaned data/final data/nyschool_test.csv") %>% 
-  select(-c(ENTITY_CD, INSTITUTION_ID, ENTITY_NAME))
+  select(-c(ENTITY_CD, INSTITUTION_ID, ENTITY_NAME)) %>% 
+  mutate(OVERALL_STATUS = as.factor(OVERALL_STATUS),
+         NEEDS_INDEX = as.factor(NEEDS_INDEX))
 # this is a list of levels for each factor in the original df
 xlevs <- lapply(nyschool_train[,sapply(nyschool_train, is.factor), drop = F], function(j){
   levels(j)
