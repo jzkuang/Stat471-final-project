@@ -15,8 +15,8 @@ ridge_fit = cv.glmnet(GRAD_RATE ~ ., # formula notation, as usual
                       alpha = 0, # alpha = 0 for ridge
                       nfolds = 10, # number of folds
                       data = dummified_train) # data to run ridge on
-
-## Plots
+save(ridge_fit, file = "Stat-471-final-project/results/ridge_fit.RData")
+#### Plots ####
 #saving the tuning for m
 png(width = 6, 
     height = 4,
