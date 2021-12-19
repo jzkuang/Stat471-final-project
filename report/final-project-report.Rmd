@@ -62,7 +62,23 @@ The first data set, the Student and Educator Database, possesses information on 
 
 We downloaded the data from the data.nysed.gov, but it came in the form Microsoft Access Databases. We manually had to extract the data into excel files preserving column names. On the extracted data, we filtered for data only from 2019. The team made this choice after noticing that much of the 2020 data was incomplete, likely an artifact of delays on the end of NYSED. There were also several columns that were missing most if not all of their data. We decided to also remove those features. Further, some data sets had data for each demographic group within the school in addition to numbers for the entire student body. As this was only present in some of the data, we decided to use only observations for entire school bodies. Once we had filtered the data, we merged them together using the Entity_CD identifier.
 
+## Data Description
+
 ## Data Exploration
+
+
+
+# Modeling
+
+## Regression-Based Models
+
+
+
+## Tree-Based Models
+
+
+
+# Conclusions
 
 \appendix
 
