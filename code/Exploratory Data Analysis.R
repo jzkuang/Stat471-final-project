@@ -30,9 +30,19 @@ training %>%
   pivot_longer(everything(), names_to = "Variable", values_to = "SD") %>% 
   arrange(desc(SD))
 
-training %>% 
+# Create a correlation matrix
+png(width = 6, 
+    height = 6,
+    res = 300,
+    units = "in", 
+    filename = "Stat-471-final-project/results/eda_corr_matrix.png")
+cormatrix <- training %>% 
   select_if(is.numeric) %>% 
-  ggcorr(method = c("everything", "pearson"), layout.exp = 15, geom = "tile", max_size = 2)
+  # select(-c(1, 10:13, 18)) %>% 
+  cor() %>% 
+  corrplot(method="color", type = "lower", tl.col="black", tl.cex = .5)
+print(cormatrix)
+dev.off()
 
 # Get What Correlates the Most
 training %>% 

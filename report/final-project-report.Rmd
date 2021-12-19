@@ -87,11 +87,13 @@ We used an 80-20 train-test split for our modeling.
 
 ### Response
 
+The first thing that our team wanted to explore is the response variable, i.e. graduation rate.
+
 ```{r eda-gr-hist, fig.width = 4, fig.height= 3, out.width= "60%", fig.align= 'center', fig.cap="Distribution of the Graduation Rate", fig.pos="h", echo=FALSE}
 knitr::include_graphics("../results/eda_grad_hist.png")
 ```
 
-The first thing that our team wanted to explore is the response variable, i.e. graduation rate. To that end, we produced a histogram out of our data's training rate (Figure \@ref(fig:eda-gr-hist)). From the histogram, we can see that the data is negatively skewed. Most high schools have an above 75% graduation rate, but there are a few schools that are very poor performers. The mean graduation rate for the training data is `r mean(training$grad_rate)`, and the standard deviation of the graduation rate is `r sd(training$grad_rate)`. 
+To that end, we produced a histogram out of our data's training rate (Figure \@ref(fig:eda-gr-hist)). From the histogram, we can see that the data is negatively skewed. Most high schools have an above 75% graduation rate, but there are a few schools that are very poor performers. The mean graduation rate for the training data is `r mean(training$grad_rate)`, and the standard deviation of the graduation rate is `r sd(training$grad_rate)`. 
 
 ```{r worst-schools, echo=FALSE}
 # Which schools are the lowest?
@@ -113,10 +115,48 @@ Table \@ref(tab:worst-schools) shows us the fifteen schools with the worst gradu
 
 ### Features
 
+Next, we explored the features of our dataset more depth. 
+
+```{r eda-cv, echo= FALSE}
+stand_sd <- function(vector){
+  return (sd(vector)/mean(vector))
+}
+training %>% 
+  select(-GRAD_RATE) %>% 
+  summarise_if(is.numeric, stand_sd) %>% 
+  pivot_longer(everything(), names_to = "Variable", values_to = "Coefficient of Variation") %>% 
+  arrange(desc(`Coefficient of Variation`)) %>% 
+  slice(1:10) %>% 
+  kable(format = "latex", row.names = NA,
+      booktabs = TRUE, digits = 2,
+      caption = "Ten Highest Coefficient of Variations") %>%
+  kable_styling(position = "center", latex_options = "HOLD_position")
+```
+First, we wanted to see what the variation is like within our features. To that end, we created Table \@ref(tab:eda-cv), which displays the variables with the ten highest coefficient of variations (i.e. standard deviation divided by mean). We can see that the most variable features tend to be demographic ones (percent of students with parents in the Armed Forces and percent of students who are migrants being the top two). This makes a bit of intuitive sense. Some NY schools will be comprised mostly of a single demographic, e.g. students with parents in the Armed Forces, while others will have that demographic completely missing. This leads to a high variation among schools in demographic factors.
+
+```{r eda-cm, fig.width = 8, fig.height= 8, out.width= "60%", fig.align= 'center', fig.cap="Correlation Matrix Visualized for Features", fig.pos="h", echo=FALSE}
+knitr::include_graphics("../results/eda_corr_matrix.png")
+```
+In Figure \@ref(fig:eda-cm), we can see how these different features correlate with one another as well our response variable. As expected, most of the demographic features are very closely correlated with one another. For example, percent female students and percent male students have almost a perfect negative correlation for obvious reasons. More interesting are the features that correlate with one another with a less blatantly obvious connection and also the absence of correlation for some features. There is a heavily negative correlation between percent of students who are white and the percent of students who are on free lunch. This, of course, makes intuitive sense given the racial dynamics of the United States. In fact, many of the features that we expect to be common in worse schools correlate negatively with the percent of students who are white at a school. The percent who are out of certification and who are inexperienced for example are negatively correlated. We, on the other hand, don't see much if any correlation between the number of students at a school with and any of the other features that aren't relate to staff counts. So, whiter schools aren't smaller nor are more Asian schools larger. 
+
+```{r corr-gr, echo = FALSE}
+training %>% 
+  select_if(is.numeric) %>% 
+  cor() %>% 
+  as.data.frame() %>% 
+  select(GRAD_RATE) %>% 
+  arrange(desc(abs(GRAD_RATE))) %>% 
+  slice(2:11)  %>% 
+  kable(format = "latex", row.names = NA,
+      booktabs = TRUE, digits = 2,
+      caption = "Ten Highest Correlations With the Response Variable") %>%
+  kable_styling(position = "center", latex_options = "HOLD_position")
+```
+We can also explore the correlation with the response variable and our feature variables. The ten top variables most, negatively or positively, correlated with graduation rate are shown in Table \@ref(tab:corr-gr). The features that we expect to see appear with the respective signs. Attendance rate is the most correlated, which makes sense. After all, you can't graduate if you don't go to school. We also see economic variables indicating poverty (precent of students with free lunch, percent who are economically disadvantaged, and percent homeless) do negatively correlate with graduation rate. Poorer students having more difficulty graduating is a logical story. Poorer students are also more likely to attend worse schools. Interestingly, per pupil expenditure using federal funds correlates negatively with graduation rate. We expected the opposite relationship. More money should equal better results! Perhaps, the worse schools or the poorest receive the most federal funding. That would explain the relationship, but, without more knowledge on how federal funding is distributed, we can not make a definite conclusion.
+
 # Modeling
 
 ## Regression-Based Models
-
 
 
 ## Tree-Based Models
