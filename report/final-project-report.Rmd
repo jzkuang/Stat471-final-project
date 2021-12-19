@@ -86,13 +86,18 @@ Moreover, there are methods of tuning the random forest to build better random f
 knitr::include_graphics("../results/rf_tuning.png")
 ```
 
-We tuned our random forest models based on variable m: the subset of features at each split point of the tree. By tuning against out-of-bag error, we determine an optimal m-value, as shown in Figure \@ref(fig:rftuning). With this tuned parameter, we are able to build a better random forest, and this random forest was checked against number of trees to ensure its out-of-bag error had stabilized. Then, we calculate the levels of variable importance using the tuned random forest in Figure \@ref(fig:rfimportance).
+We tuned our random forest models based on variable m: the subset of features at each split point of the tree. By tuning against out-of-bag error, we determine an optimal m-value, as shown in Figure \@ref(fig:rftuning). The value that minimized the OOB error was 21, which is much higher than the default m value of 10. With this tuned parameter, we are able to build a better random forest, and this random forest when checked against number of trees to ensure had an out-of-bag error that was stabilized. 
 
 ```{r rfimportance, fig.cap = "Plot of the variable importance using the purity based importance (on the right) and the OOB prediction based importance (on the left).", fig.align='center', echo = FALSE}
 knitr::include_graphics("../results/rf_importance.png")
 ```
+Then, we calculate the levels of variable importance using the tuned random forest as shown in Figure \@ref(fig:rfimportance). The clear most important variable in this random forest is the attendance rate of students at the school. This variable has a much higher value than the rest on both measures of importance, indicating that it is incredibly important to the model and calculating graduation rates. This makes sense because attendance is important to doing well in school, so schools with higher attendance rates tended to have more students perform better and graduate.
+
+For the OOB prediction based importance, the top three measures were attendance rate, overall status of the school, and the percent of the students that were Asian. Although not as importance as attendance rate, overall status and percent Asian also make sense when determining graduation rates. If the school is in good standing, then we would expect it to have higher graduation rates. Also, Asians are known to prioritize school and studying, which means that schools with higher percent Asians will have a slight boost in graduation rates. For the purity based importance, we also see percent of students with free lunch and percent students with disabilities being important. In contrast to the others, a higher value in these categories might represent lower income areas, which might lead to lower resources in the school and lower graduation rates. Overall, these values do make intuitive sense as to why they might be predictive of graduation rates.
 
 ### Boosting
+Boosting (gradient boosting) is another powerful tree-based method that we will be building based on these New York high schools graduation rates. This method is known for building great models and models that are better than even random forests. It also works well with continuous response variables, such as the graduation rate in our case. The model also reveals which variables are most important in determining graduation rate, as well as partial dependence plots to go alongside. So, we use boosting in order to build a model that will have great predictive power for graduation rates and will also highlight the important variables that we must consider. 
+
 
 
 # Conclusions
