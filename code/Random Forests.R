@@ -50,8 +50,8 @@ save(rf_fit_tuned,file = "Stat-471-final-project/results/rf_fit_tuned.RData")
 #HOW TO LOAD THE FOREST: rf_fit_tuned = get(load("Stat-471-final-project/results/rf_fit_tuned.RData"))
 
 #save the variable importance plot
-png(width = 9, 
-    height = 7,
+png(width = 8, 
+    height = 4.5,
     res = 300,
     units = "in", 
     filename = "Stat-471-final-project/results/rf_importance.png")

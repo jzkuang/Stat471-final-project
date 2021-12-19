@@ -75,10 +75,39 @@ We downloaded the data from the data.nysed.gov, but it came in the form Microsof
 
 
 ## Tree-Based Models
+After modeling our data using regression-based models, we decided that we want more powerful and better predicting models using tree-based models. Although tree-based models can be unstable and worse at predicting certain sets of data, we believe this state-of-the-art prediction method will be able to uncover the most important factors in determining graduation rate of high schools.
 
+### Random forest
+Random forests represent one tree-based model that have been shown to perform exceptionally in certain sets of data. It uses a random subset method and bagging in order to prevent overfitting, which gives it great predictive power. One issue with random forests is their lack of precision in predicting continuous response variables depending on how well the true model fits a tree-based approach. However, it is important to test and analyze the predictive power of the random forest because of its proven predicting power. 
+
+Moreover, there are methods of tuning the random forest to build better random forests that are catered to our data. Although random forests have low interpretability compared to some tree-based models, it measures variable importance which is valuable for our purposes in learning the most important factors for school graduation rates.  
+
+```{r rftuning, fig.cap = "Tuning the value for m in a random forest model", fig.align='center', echo = FALSE}
+knitr::include_graphics("../results/rf_tuning.png")
+```
+
+We tuned our random forest models based on variable m: the subset of features at each split point of the tree. By tuning against out-of-bag error, we determine an optimal m-value, as shown in Figure \@ref(fig:rftuning). With this tuned parameter, we are able to build a better random forest, and this random forest was checked against number of trees to ensure its out-of-bag error had stabilized. Then, we calculate the levels of variable importance using the tuned random forest in Figure \@ref(fig:rfimportance).
+
+```{r rfimportance, fig.cap = "Plot of the variable importance using the purity based importance (on the right) and the OOB prediction based importance (on the left).", fig.align='center', echo = FALSE}
+knitr::include_graphics("../results/rf_importance.png")
+```
+
+### Boosting
 
 
 # Conclusions
+
+## Method comparison
+
+## Takeaways
+
+## Limitations
+
+### Dataset limitations
+
+### Analysis limitations
+
+## Follow-ups
 
 \appendix
 
