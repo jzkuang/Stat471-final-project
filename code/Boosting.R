@@ -7,6 +7,7 @@ nyschool_train = read_csv("Stat-471-final-project/cleaned data/final data/nyscho
 
 nyschool_train = nyschool_train %>% 
   mutate(across(OVERALL_STATUS, as.factor)) %>%
+  mutate(across(NEEDS_INDEX, as.factor)) %>%
   select(-ENTITY_CD, -ENTITY_NAME, -INSTITUTION_ID)
 
 set.seed(1)
