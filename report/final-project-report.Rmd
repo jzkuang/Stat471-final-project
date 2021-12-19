@@ -18,7 +18,7 @@ urlcolor: blue
 ---
 
 ```{r setup, include=FALSE}
-options(scipen = 0, digits = 3)  # controls number of significant digits printed
+options(scipen = 0, digits = 3)  
 library(tidyverse)
 library(kableExtra)
 full_data <- read_csv("../cleaned data/final data/merged data.csv") 
@@ -169,7 +169,7 @@ This tuned model can also reveal the importance of certain variables, as shown i
 read_tsv("../results/gbm_importance.tsv") %>%
   kable(format = "latex", row.names = NA, 
         booktabs = TRUE, digits = 2, 
-        col.names = c("Variable", "Importance"),
+        col.names = c("Variable", "Relative Importance"),
         caption = "Importance of variables in the boosting model.") %>%
   kable_styling(position = "center")
 ```
