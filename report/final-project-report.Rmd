@@ -76,10 +76,9 @@ Our response variable is the graduation rate for each of our schools.
 
 Drawing on data from the New York State's Department of Education, we included 31 variables in our analysis. These variables can be separated into two broad categories: features involving the school and features involving students. The school features can be further subdivided into school standing, expenditure related, and staff count variable groups, while the student features can be subdivided into characteristic and demographic features. All of the variables are numeric except for Overall Status and Needs Index. For a detailed specification of each variable, refer to Appendix \@ref(appendix).
 
-
 ## Data Allocation
 
-
+We used an 80-20 train-test split for our analysis. 
 
 ## Data Exploration
 
