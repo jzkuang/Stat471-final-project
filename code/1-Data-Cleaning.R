@@ -44,7 +44,6 @@ suspensions_filtered <- suspensions %>%
 write.csv(suspensions_filtered, "stat-471-final-project/cleaned data/Suspensions.csv", row.names = FALSE)
 
 # Data on the demographic composition of schools
-# Data on each school number of suspensions
 demographics <- readxl::read_excel("stat-471-final-project/data/Demographic Factors.xlsx")
 demographics_filtered <- demographics %>%
   filter(YEAR == "2019") %>% 
@@ -52,6 +51,8 @@ demographics_filtered <- demographics %>%
   filter(!grepl("County", ENTITY_NAME)) %>% 
   select(c(ENTITY_CD, ENTITY_NAME, starts_with("PER")))
 write.csv(demographics_filtered, "stat-471-final-project/cleaned data/Demographics.csv", row.names = FALSE)
+
+## Alex's work
 
 #gave warnings, I'm guessing most of the warnings are because of columns that have no data
 #accountability, gives overall status of school
@@ -87,7 +88,6 @@ inexperience_filtered <- inexperience %>%
   select(ENTITY_CD, NUM_TEACH, PER_TEACH_INEXP, NUM_PRINC, PER_PRINC_INEXP) #UNSURE IF SHOULD USE TOTAL NUM OF TEACH AND PRINC
 write.csv(inexperience_filtered, "Stat-471-final-project/cleaned data/Inexperience.csv", row.names = FALSE)
 
-# Alex's work
 #gave warnings
 #out of certification (teachers no certification)
 OOC <- readxl::read_excel("Stat-471-final-project/data/Teachers Teaching Out of Certification.xlsx")
