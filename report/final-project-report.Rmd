@@ -23,7 +23,9 @@ library(tidyverse)
 library(kableExtra)
 full_data <- read_csv("../cleaned data/final data/merged data.csv") 
 training <- read_csv("../cleaned data/final data/nyschool_train.csv") %>% 
-  select(-c(ENTITY_CD, ENTITY_NAME, INSTITUTION_ID))
+  select(-c(ENTITY_CD, ENTITY_NAME, INSTITUTION_ID))  %>% 
+  mutate(OVERALL_STATUS = as.factor(OVERALL_STATUS),
+         NEEDS_INDEX = as.factor(NEEDS_INDEX))
 ```
 
 \bigskip
@@ -157,14 +159,38 @@ We can also explore the correlation with the response variable and our feature v
 # Modeling
 
 ## Regression-Based Models
-We first wanted to create a penalized regression as a baseline for our analysis. Regressions are quite simple, often merely the result of . We decided on using a ridge regression for two main reasons. First, we only have thirty one variables while over a thousand observations. There is not a huge need to pare down the number of features that we have even when accounting for the indicator variables that our categorical variables will split into. Second, we have several features that are highly quite correlated with one another. Lasso regressions are unstable when they are faced with such variables (choosing one or the other), while ridge regressions tend to simply split the coefficients.
+We first wanted to create a baseline for our expectations for the analysis. Thus, we thought that using a linear regression would be a perfect first step. Regressions are quite simple, with most guessing values by multiplying coefficients to their respective features and adding an intercept.  However, we were worried that there might be some overfitting so we wanted to have a penalty term. We decided on using a linear ridge regression for two main reasons. First, we only have thirty one variables while over a thousand observations. There is not a huge need to pare down the number of features that we have even when accounting for the indicator variables that our categorical variables will split into. Second, we have several features that are highly quite correlated with one another. Lasso regressions are unstable when they are faced with such variables (choosing one or the other in a basically random manner), while ridge regressions tend to simply split the coefficients.
 
-```{r eda-cm, fig.width = 8, fig.height= 8, out.width= "80%", fig.align= 'center', fig.cap="Correlation Matrix", fig.pos="h", echo=FALSE}
-knitr::include_graphics("../results/eda_corr_matrix.png")
+```{r rr-training, fig.width = 4.5, fig.height= 4, out.width= "60%", fig.align= 'center', fig.cap="Cross Validation Plot for Linear Ridge Regression", fig.pos="h", echo=FALSE}
+knitr::include_graphics("../results/lr_tuning.png")
 ```
 
+The major turning parameter for ridge regressions is lambda, which decides how much we penalize the regression for each coefficient. The higher the lambda is the more basic the model. To choose our lambda, we created our shrinkage model under a 10-fold cross validation. We used the one-standard error rule to pick the best lambda, 3.99, for testing. This small lambda seems best even given that there is little apparent overfitting at the start of the model as seen in Figure \@ref(fig:rr-training). 
+
+```{r rr-var-import, fig.width = 5.5, fig.height= 5, out.width= "70%", fig.align= 'center', fig.cap="Feature Importance Plot for Lienar Regressions", fig.pos="h", echo=FALSE}
+knitr::include_graphics("../results/lr_features.png")
+```
+
+With the lambda chosen, we can create the model with from which we are going to get our test RMSE. Figure \@ref(fig:rr-var-import), shows not only that model (the one at the dotted line) but also the growth of the model as the penalty error term gradually decreases. We have also highlighted the eight most impactful variables, and we can see the exact values of their coefficients in Table \@ref(tab:lr-coefs). As a note, these coefficients have been standardized, and so are not reflective of absolute values of their respective features.
+
+```{r lr-coefs, echo=FALSE, message = FALSE}
+source("../code/functions/plot_glmnet.R")
+load("../results/ridge_fit.RData")
+dummified_train <- as.data.frame(model.matrix( ~ .-1, training))
+extract_std_coefs(ridge_fit, dummified_train) %>% 
+  arrange(desc(abs(coefficient))) %>% 
+  slice(1:8) %>% 
+  kable(format = "latex", 
+      booktabs = TRUE, digits = 2,
+      caption = "Ridge Regression Coefficients") %>%
+  kable_styling(position = "center", latex_options = "HOLD_position")
+```
+It should come as no surprise that attendance rate is the most important coefficient (by a wide margin too). Even in the exploratory data analysis, we noted that attendance rate was highly correlated with graduation rate. That it has such a large impact, even with ridge penalty, shows just how important the feature is to the model. The rest of the top eight features, however, were less noticed in our early data exploration. The second high feature is percent of students with disabilities. This makes sense (it is harder to do school with a disability), but it is disappointing to see it make such a high difference. Having more people who need to learn English leading to lower graduations rates is similarly expected but disappointing. Surprisingly, the state/local spending more money on a school indicates a lower graduation rate. This is a rather confusing result. In the early data exploration, we did note that federal expenditure was also negatively correlated, but that was on its own. This model should account for the confounding variables that could have led to the federal expenditure result. Perhaps, though this is part of the problem. The model could have a multicolinearity problem with multiple other variables correlating enough with per pupil state/local expenditures to return this unintuitive result. The rest of the variables, however, don't seem to have this problem with relatively intuitive explanations. For example, suspensions increasing meaning lower graduation comes as no surprise to anyone.
+
+It is important to remember the purpose of the linear ridge regression model. It serves as our baseline for the more advanced models. To that end, it will be interesting to see if the variables in this model remain impactful in others or if they were merely an idiosyncrasy of linear ridge regressions. It will also be interesting to compare the test error of linear ridge regressions with other regressions.
+
 ## Tree-Based Models
-After modeling our data using regression-based models, we decided that we want more powerful and better predicting models using tree-based models. Although tree-based models can be unstable and worse at predicting certain sets of data, we believe that the high interpretability of this prediction method will be able to uncover the most important factors in determining graduation rate of high schools.
+After modeling our data using regression-based models, we decided to used the more powerful and better predicting tree-based models. Although tree-based models can be unstable and worse at predicting certain sets of data, we believe that the high interpretability of this prediction method will be able to uncover the most important factors in determining graduation rate of high schools.
 
 ### Random forest
 Random forests represent one tree-based model that have been shown to perform exceptionally in certain sets of data. They use a random subset method and bagging in order to prevent overfitting, which gives it great predictive power. One issue with random forests is their lack of precision in predicting continuous response variables depending on how well the true model fits a tree-based approach. However, it is important to test and analyze the predictive power of the random forest because of its proven predicting power. 
@@ -177,12 +203,12 @@ knitr::include_graphics("../results/rf_tuning.png")
 
 We tuned our random forest models based on variable m: the subset of features at each split point of the tree. By tuning against out-of-bag error, we determine an optimal m-value, as shown in Figure \@ref(fig:rftuning). The value that minimized the OOB error was 3, which is lower than the default m value of 10. With this tuned parameter, we are able to build a better random forest, and this random forest when checked against number of trees to ensure had an out-of-bag error that was stabilized. 
 
-```{r rfimportance, fig.width = 7, fig.height= 5, out.width= "60%", fig.cap = "Plot of the variable importance using the purity based importance (on the right) and the OOB prediction based importance (on the left).", fig.align='center', echo = FALSE}
+```{r rfimportance, fig.width = 7, fig.height= 6, out.width= "80%", fig.cap = "Plot of the variable importance using the purity based importance (on the right) and the OOB prediction based importance (on the left).", fig.align='center', echo = FALSE}
 knitr::include_graphics("../results/rf_importance.png")
 ```
 Then, we calculate the levels of variable importance using the tuned random forest as shown in Figure \@ref(fig:rfimportance). The clear most important variable in this random forest is the attendance rate of students at the school. This variable has a much higher value than the rest on both measures of importance, indicating that it is incredibly important to the model and calculating graduation rates. This makes sense because attendance is important to doing well in school, so schools with higher attendance rates tended to have more students perform better and graduate.
 
-For the the OOB prediction based importance, the top three measures were attendance rate, total pupil count, and percent of students with disabilities. For the purity based importance, the top three were attendance rate, percent free lunch, and percent students with disabilities. Although not as important as attendance rate, the other three variables we see are indicative of graduation rate. It's not clear how these variables might impact graduation rate, so We extracted the five lowest graduation rates and their respective variables in Table \@ref(tab:lowgrad). It appears that low graduation rates correspond to lower total pupil counts, higher percent of students with disabilities, and higher percent with free lunch. However, the correlation between these variables and graduation rate isn't incredibly strong and this table does not provide the best explanation due to other factors that contribute to the school's graduation rate, which the table omits. Still, this table can shine some light into how these important variables might impact the graduation rate.
+For the the OOB prediction based importance, the top three measures were attendance rate, total pupil count, and percent of students with disabilities. For the purity based importance, the top three were attendance rate, percent free lunch, and percent students with disabilities. Although not as important as attendance rate, the other three variables we see are indicative of graduation rate. It's not clear how these variables might impact graduation rate, so we extracted the five lowest graduation rates and their respective variables in Table \@ref(tab:lowgrad). It appears that low graduation rates correspond to lower total pupil counts, higher percent of students with disabilities, and higher percent with free lunch. However, the correlation between these variables and graduation rate isn't incredibly strong and this table does not provide the best explanation due to other factors that contribute to the school's graduation rate, which the table omits. Still, this table can shine some light into how these important variables might impact the graduation rate.
 
 It might make sense that the percent of students with disabilities might be indicative of graduation rates because more students with disabilities might signal a lower socio-economic area, meaning that the school would have less funding and overall worse graduation rates. Similarly, higher percentages of students with free lunch might also be indicative of low graduation rates because of the overlying factors of lower economic status. 
 
