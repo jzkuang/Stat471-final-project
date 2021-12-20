@@ -250,8 +250,19 @@ knitr::include_graphics("../results/partial_dependence.png")
 The benefit that boosting has over random forests is the ability to make partial dependence plots to determine how these variables effect the graduation rate. As shown in Figure \@ref(fig:partialdependence), we see that attendance rate increasing corresponds to increased graduation rates. Higher total pupil counts corresponds to higher graduation rates and higher percent of students with free lunch corresponds to decreased graduation rates. These correlations make intuitive sense, as described in the random forest variable importance explanation.
 
 # Conclusions
-
+```{r rmse, message = FALSE, echo = FALSE}
+read_tsv("../results/rmse_table.tsv") %>%
+  kable(format = "latex", row.names = NA, 
+        booktabs = TRUE, digits = 2, 
+        col.names = c(" ", "Linear Regression", "Random Forest", "Boosting"),
+        caption = "Model evaluation using the test root mean squared error.") %>%
+  kable_styling(position = "center")
+```
 ## Method comparison
+
+Table \@ref(tab:rmse) shows the test root means squared error (RMSE) for all three models. The boosting model had the lowest test error with 6.10, followed by linear ridge regression at 6.93, and random forest model performed the worst 6.10. Overall, these errors were quite small, especially due to the large range of graduation rates present in the data. In addition, these results are reasonable because we would expect the boosting model to perform the best since it requires the most tuning and the most computational power. Despite requiring more compuational power, the random forest model performed worse than the linear regression model. This is likely because random forests have difficulty modeling against continuous response variables due to being a tree-based method. Consequently, it can't predict the true model for graduation rates well. 
+
+In addition 
 
 ## Takeaways
 
