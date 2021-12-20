@@ -134,7 +134,7 @@ training %>%
 ```
 First, we wanted to see what the variation is like within our features. To that end, we created Table \@ref(tab:eda-cv), which displays the variables with the ten highest coefficient of variations (i.e. standard deviation divided by mean). We can see that the most variable features tend to be demographic ones (percent of students with parents in the Armed Forces and percent of students who are migrants being the top two). This makes a bit of intuitive sense. Some NY schools will be comprised mostly of a single demographic, e.g. students with parents in the Armed Forces, while others will have that demographic completely missing. This leads to a high variation among schools in demographic factors.
 
-```{r eda-cm, fig.width = 8, fig.height= 8, out.width= "60%", fig.align= 'center', fig.cap="Correlation Matrix Visualized for Features", fig.pos="h", echo=FALSE}
+```{r eda-cm, fig.width = 8, fig.height= 8, out.width= "80%", fig.align= 'center', fig.cap="Correlation Matrix", fig.pos="h", echo=FALSE}
 knitr::include_graphics("../results/eda_corr_matrix.png")
 ```
 In Figure \@ref(fig:eda-cm), we can see how these different features correlate with one another as well our response variable. As expected, most of the demographic features are very closely correlated with one another. For example, percent female students and percent male students have almost a perfect negative correlation for obvious reasons. More interesting are the features that correlate with one another with a less blatantly obvious connection and also the absence of correlation for some features. There is a heavily negative correlation between percent of students who are white and the percent of students who are on free lunch. This, of course, makes intuitive sense given the racial dynamics of the United States. In fact, many of the features that we expect to be common in worse schools correlate negatively with the percent of students who are white at a school. The percent who are out of certification and who are inexperienced for example are negatively correlated. We, on the other hand, don't see much if any correlation between the number of students at a school with and any of the other features that aren't relate to staff counts. So, whiter schools aren't smaller nor are more Asian schools larger. 
@@ -157,13 +157,17 @@ We can also explore the correlation with the response variable and our feature v
 # Modeling
 
 ## Regression-Based Models
+We first wanted to create a penalized regression as a baseline for our analysis. Regressions are quite simple, often merely the result of . We decided on using a ridge regression for two main reasons. First, we only have thirty one variables while over a thousand observations. There is not a huge need to pare down the number of features that we have even when accounting for the indicator variables that our categorical variables will split into. Second, we have several features that are highly quite correlated with one another. Lasso regressions are unstable when they are faced with such variables (choosing one or the other), while ridge regressions tend to simply split the coefficients.
 
+```{r eda-cm, fig.width = 8, fig.height= 8, out.width= "80%", fig.align= 'center', fig.cap="Correlation Matrix", fig.pos="h", echo=FALSE}
+knitr::include_graphics("../results/eda_corr_matrix.png")
+```
 
 ## Tree-Based Models
-After modeling our data using regression-based models, we decided that we want more powerful and better predicting models using tree-based models. Although tree-based models can be unstable and worse at predicting certain sets of data, we believe this state-of-the-art prediction method will be able to uncover the most important factors in determining graduation rate of high schools.
+After modeling our data using regression-based models, we decided that we want more powerful and better predicting models using tree-based models. Although tree-based models can be unstable and worse at predicting certain sets of data, we believe that the high interpretability of this prediction method will be able to uncover the most important factors in determining graduation rate of high schools.
 
 ### Random forest
-Random forests represent one tree-based model that have been shown to perform exceptionally in certain sets of data. It uses a random subset method and bagging in order to prevent overfitting, which gives it great predictive power. One issue with random forests is their lack of precision in predicting continuous response variables depending on how well the true model fits a tree-based approach. However, it is important to test and analyze the predictive power of the random forest because of its proven predicting power. 
+Random forests represent one tree-based model that have been shown to perform exceptionally in certain sets of data. They use a random subset method and bagging in order to prevent overfitting, which gives it great predictive power. One issue with random forests is their lack of precision in predicting continuous response variables depending on how well the true model fits a tree-based approach. However, it is important to test and analyze the predictive power of the random forest because of its proven predicting power. 
 
 Moreover, there are methods of tuning the random forest to build better random forests that are catered to our data. Although random forests have low interpretability compared to some tree-based models, it measures variable importance which is valuable for our purposes in learning the most important factors for school graduation rates.  
 
@@ -173,7 +177,7 @@ knitr::include_graphics("../results/rf_tuning.png")
 
 We tuned our random forest models based on variable m: the subset of features at each split point of the tree. By tuning against out-of-bag error, we determine an optimal m-value, as shown in Figure \@ref(fig:rftuning). The value that minimized the OOB error was 3, which is lower than the default m value of 10. With this tuned parameter, we are able to build a better random forest, and this random forest when checked against number of trees to ensure had an out-of-bag error that was stabilized. 
 
-```{r rfimportance, fig.cap = "Plot of the variable importance using the purity based importance (on the right) and the OOB prediction based importance (on the left).", fig.align='center', echo = FALSE}
+```{r rfimportance, fig.width = 7, fig.height= 5, out.width= "60%", fig.cap = "Plot of the variable importance using the purity based importance (on the right) and the OOB prediction based importance (on the left).", fig.align='center', echo = FALSE}
 knitr::include_graphics("../results/rf_importance.png")
 ```
 Then, we calculate the levels of variable importance using the tuned random forest as shown in Figure \@ref(fig:rfimportance). The clear most important variable in this random forest is the attendance rate of students at the school. This variable has a much higher value than the rest on both measures of importance, indicating that it is incredibly important to the model and calculating graduation rates. This makes sense because attendance is important to doing well in school, so schools with higher attendance rates tended to have more students perform better and graduate.

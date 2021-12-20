@@ -17,7 +17,7 @@ ridge_fit = cv.glmnet(GRAD_RATE ~ ., # formula notation, as usual
                       nfolds = 10, # number of folds
                       data = dummified_train) # data to run ridge on
 save(ridge_fit, file = "Stat-471-final-project/results/ridge_fit.RData")
-
+ridge_fit$lambda.1se
 #### Plots ####
 #saving the tuning for m
 png(width = 6, 
@@ -33,15 +33,11 @@ png(width = 9,
     res = 300,
     units = "in", 
     filename = "Stat-471-final-project/results/lr_features.png")
-print(plot_glmnet(ridge_fit, dummified_train, features_to_plot = 10))
+print(plot_glmnet(ridge_fit, dummified_train, features_to_plot = 8))
 dev.off()
 
-# # Largest Coef
-# # Warning!! These aren't standardized.
-# plot_glmnet(ridge_fit, dummified_train, features_to_plot = 7)
-# tibble(coef = abs(as.vector(coef(ridge_fit, s = "lambda.min"))),
-#        rownames = as.vector(rownames(coef(ridge_fit, s = "lambda.min")))) %>% 
-#   arrange(desc(coef))
+# Largest Coef
+extract_std_coefs(ridge_fit, dummified_train)
 
 #### Check the MSE for Training ####
 nyschool_test = read_csv("Stat-471-final-project/cleaned data/final data/nyschool_test.csv") %>% 
