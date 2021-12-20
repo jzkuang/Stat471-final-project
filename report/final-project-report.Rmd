@@ -21,6 +21,7 @@ urlcolor: blue
 options(scipen = 0, digits = 3)  
 library(tidyverse)
 library(kableExtra)
+library(stringr)
 full_data <- read_csv("../cleaned data/final data/merged data.csv") 
 training <- read_csv("../cleaned data/final data/nyschool_train.csv") %>% 
   select(-c(ENTITY_CD, ENTITY_NAME, INSTITUTION_ID))  %>% 
@@ -107,6 +108,9 @@ full_data %>%
     "School" = ENTITY_NAME,
     "Graduation Rate (Percent)" = GRAD_RATE
   ) %>% 
+  mutate (
+    School = str_to_title(School)
+  ) %>% 
   kable(format = "latex", row.names = NA,
       booktabs = TRUE, digits = 2,
       caption = "The Worst Performing Schools") %>%
@@ -167,7 +171,7 @@ knitr::include_graphics("../results/lr_tuning.png")
 
 The major turning parameter for ridge regressions is lambda, which decides how much we penalize the regression for each coefficient. The higher the lambda is the more basic the model. To choose our lambda, we created our shrinkage model under a 10-fold cross validation. We used the one-standard error rule to pick the best lambda, 3.99, for testing. This small lambda seems best even given that there is little apparent overfitting at the start of the model as seen in Figure \@ref(fig:rr-training). 
 
-```{r rr-var-import, fig.width = 5.5, fig.height= 5, out.width= "70%", fig.align= 'center', fig.cap="Feature Importance Plot for Lienar Regressions", fig.pos="H", echo=FALSE}
+```{r rr-var-import, fig.width = 5.5, fig.height= 5, out.width= "70%", fig.align= 'center', fig.cap="Feature Importance Plot for Linear Regressions", fig.pos="H", echo=FALSE}
 knitr::include_graphics("../results/lr_features.png")
 ```
 
