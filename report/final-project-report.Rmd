@@ -220,7 +220,7 @@ read_tsv("../results/data_importance.tsv") %>%
         caption = "The 5 lowest graduation rates and their total pupil count, 
         their percent students with disabilities (SWD), and their percent 
         students with free lunch.") %>%
-  kable_styling(position = "center")
+  kable_styling(position = "center", latex_options = "HOLD_position")
 ```
 
 ### Boosting
@@ -240,7 +240,7 @@ read_tsv("../results/gbm_importance.tsv") %>%
         booktabs = TRUE, digits = 2, 
         col.names = c("Variable", "Relative Importance"),
         caption = "Importance of variables in the boosting model.") %>%
-  kable_styling(position = "center")
+  kable_styling(position = "center", latex_options = "HOLD_position")
 ```
 
 ```{r partialdependence, fig.cap = "The partial dependence plot of the three most important variables in the boosting model.", fig.align='center', echo = FALSE, fig.pos="H"}
@@ -256,7 +256,7 @@ read_tsv("../results/rmse_table.tsv") %>%
         booktabs = TRUE, digits = 2, 
         col.names = c(" ", "Linear Regression", "Random Forest", "Boosting"),
         caption = "Model evaluation using the test root mean squared error.") %>%
-  kable_styling(position = "center")
+  kable_styling(position = "center", latex_options = "HOLD_position")
 ```
 
 ## Method comparison
