@@ -12,8 +12,7 @@ suspensions <- read_csv("stat-471-final-project/cleaned data/Suspensions.csv") %
   select(c(ENTITY_CD, PER_SUSPENSIONS))
 demographics <- read_csv("stat-471-final-project/cleaned data/Demographics.csv") %>% 
   select(-c(ENTITY_NAME))
-accountability <- read_csv("stat-471-final-project/cleaned data/Accountability.csv") %>% 
-  select(-c(MADE_PROGRESS))
+accountability <- read_csv("stat-471-final-project/cleaned data/Accountability.csv")
 boces <- read_csv("stat-471-final-project/cleaned data/BOCES.csv") %>% 
   select(-c(BOCES_CD))
 expenditure <- read_csv("stat-471-final-project/cleaned data/Expenditure.csv")
