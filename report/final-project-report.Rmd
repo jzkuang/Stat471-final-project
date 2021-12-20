@@ -250,21 +250,12 @@ knitr::include_graphics("../results/partial_dependence.png")
 The benefit that boosting has over random forests is the ability to make partial dependence plots to determine how these variables effect the graduation rate. As shown in Figure \@ref(fig:partialdependence), we see that attendance rate increasing corresponds to increased graduation rates. Higher total pupil counts corresponds to higher graduation rates and higher percent of students with free lunch corresponds to decreased graduation rates. These correlations make intuitive sense, as described in the random forest variable importance explanation.
 
 # Conclusions
-```{r rmse, message = FALSE, echo = FALSE}
-read_tsv("../results/rmse_table.tsv") %>%
-  kable(format = "latex", row.names = NA, 
-        booktabs = TRUE, digits = 2, 
-        col.names = c(" ", "Linear Regression", "Random Forest", "Boosting"),
-        caption = "Model evaluation using the test root mean squared error.") %>%
-  kable_styling(position = "center")
-```
+
 ## Method comparison
 
-Table \@ref(tab:rmse) shows the test root means squared error (RMSE) for all three models. The boosting model had the lowest test error with 6.10, followed by linear ridge regression at 6.93, and random forest model performed the worst 6.10. Overall, these errors were quite small, especially due to the large range of graduation rates present in the data. In addition, these results are reasonable because we would expect the boosting model to perform the best since it requires the most tuning and the most computational power. Despite requiring more compuational power, the random forest model performed worse than the linear regression model. This is likely because random forests have difficulty modeling against continuous response variables due to being a tree-based method. Consequently, it can't predict the true model for graduation rates well. 
-
-In addition each model also had very similar identification of the most important variables for predicting graduation rates. Attendance rate was the clear most important explanatory variable in all three models. In addition, generally variables reflecting low socioeconomic status within the student demographics held high importance as well, such as percent students with free lunch being in the top three for each model. These variables would make intuitive sense to be the most important. Greater attendance rates lead to more student participation and learning in school and generally better graduation rates as a result. Low socioeconomic status within the school would lead to less resources for the students and the school, which would suggest low graduation rates. Total pupil counts were also important variables in both tree-based methods, which isn't entirely intuitive. This might suggest that larger amounts of students may allow students to interact and engage more in learning with each other, possibly leading to higher graduation rates. However, these variables are all correlational, so these suggestions are all hypothetical.
-
 ## Takeaways
+
+While it is true that ridge regressions, random forests, and boosting models are focused on predicting results and not discovering scientifically iron-clad relationships, they still offer insights that policymakers and educators can draw from to improve high school graduation rates across the New York state. The boosting model, in particular, can be of great use given that it beat the other models in predictive power. The top three most important variables that the boosting model identified were: attendance rates, number of students per school, and percent of students on free lunch. As stated previously in the boosting section but repeated here for coherence, graduations rates 
 
 ## Limitations
 
