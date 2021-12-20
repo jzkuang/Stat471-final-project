@@ -96,7 +96,7 @@ The first thing that our team wanted to explore is the response variable, i.e. g
 knitr::include_graphics("../results/eda_grad_hist.png")
 ```
 
-To that end, we produced a histogram out of our data's training rate (Figure \@ref(fig:eda-gr-hist)). From the histogram, we can see that the data is negatively skewed. Most high schools have an above 75% graduation rate, but there are a few schools that are very poor performers. The mean graduation rate for the training data is `r mean(training$grad_rate)`, and the standard deviation of the graduation rate is `r sd(training$grad_rate)`. 
+To that end, we produced a histogram out of our data's training rate (Figure \@ref(fig:eda-gr-hist)). From the histogram, we can see that the data is negatively skewed. Most high schools have an above 75% graduation rate, but there are a few schools that are very poor performers. The mean graduation rate for the training data is `r mean(training$GRAD_RATE)`, and the standard deviation of the graduation rate is `r sd(training$GRAD_RATE)`. 
 
 ```{r worst-schools, echo=FALSE}
 # Which schools are the lowest?
