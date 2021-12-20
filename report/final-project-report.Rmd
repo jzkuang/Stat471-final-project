@@ -136,7 +136,7 @@ training %>%
 ```
 First, we wanted to see what the variation is like within our features. To that end, we created Table \@ref(tab:eda-cv), which displays the variables with the ten highest coefficient of variations (i.e. standard deviation divided by mean). We can see that the most variable features tend to be demographic ones (percent of students with parents in the Armed Forces and percent of students who are migrants being the top two). This makes a bit of intuitive sense. Some NY schools will be comprised mostly of a single demographic, e.g. students with parents in the Armed Forces, while others will have that demographic completely missing. This leads to a high variation among schools in demographic factors.
 
-```{r eda-cm, fig.width = 8, fig.height= 8, out.width= "80%", fig.align= 'center', fig.cap="Correlation Matrix", fig.pos="h", echo=FALSE}
+```{r eda-cm, fig.width = 8, fig.height= 8, out.width= "80%", fig.align= 'center', fig.cap="Correlation Matrix", fig.pos="H", echo=FALSE}
 knitr::include_graphics("../results/eda_corr_matrix.png")
 ```
 In Figure \@ref(fig:eda-cm), we can see how these different features correlate with one another as well our response variable. As expected, most of the demographic features are very closely correlated with one another. For example, percent female students and percent male students have almost a perfect negative correlation for obvious reasons. More interesting are the features that correlate with one another with a less blatantly obvious connection and also the absence of correlation for some features. There is a heavily negative correlation between percent of students who are white and the percent of students who are on free lunch. This, of course, makes intuitive sense given the racial dynamics of the United States. In fact, many of the features that we expect to be common in worse schools correlate negatively with the percent of students who are white at a school. The percent who are out of certification and who are inexperienced for example are negatively correlated. We, on the other hand, don't see much if any correlation between the number of students at a school with and any of the other features that aren't relate to staff counts. So, whiter schools aren't smaller nor are more Asian schools larger. 
@@ -161,30 +161,29 @@ We can also explore the correlation with the response variable and our feature v
 ## Regression-Based Models
 We first wanted to create a baseline for our expectations for the analysis. Thus, we thought that using a linear regression would be a perfect first step. Regressions are quite simple, with most guessing values by multiplying coefficients to their respective features and adding an intercept.  However, we were worried that there might be some overfitting so we wanted to have a penalty term. We decided on using a linear ridge regression for two main reasons. First, we only have thirty one variables while over a thousand observations. There is not a huge need to pare down the number of features that we have even when accounting for the indicator variables that our categorical variables will split into. Second, we have several features that are highly quite correlated with one another. Lasso regressions are unstable when they are faced with such variables (choosing one or the other in a basically random manner), while ridge regressions tend to simply split the coefficients.
 
-```{r rr-training, fig.width = 4.5, fig.height= 4, out.width= "60%", fig.align= 'center', fig.cap="Cross Validation Plot for Linear Ridge Regression", fig.pos="h", echo=FALSE}
+```{r rr-training, fig.width = 4.5, fig.height= 4, out.width= "60%", fig.align= 'center', fig.cap="Cross Validation Plot for Linear Ridge Regression", fig.pos="H", echo=FALSE}
 knitr::include_graphics("../results/lr_tuning.png")
 ```
 
 The major turning parameter for ridge regressions is lambda, which decides how much we penalize the regression for each coefficient. The higher the lambda is the more basic the model. To choose our lambda, we created our shrinkage model under a 10-fold cross validation. We used the one-standard error rule to pick the best lambda, 3.99, for testing. This small lambda seems best even given that there is little apparent overfitting at the start of the model as seen in Figure \@ref(fig:rr-training). 
 
-```{r rr-var-import, fig.width = 5.5, fig.height= 5, out.width= "70%", fig.align= 'center', fig.cap="Feature Importance Plot for Lienar Regressions", fig.pos="h", echo=FALSE}
+```{r rr-var-import, fig.width = 5.5, fig.height= 5, out.width= "70%", fig.align= 'center', fig.cap="Feature Importance Plot for Lienar Regressions", fig.pos="H", echo=FALSE}
 knitr::include_graphics("../results/lr_features.png")
 ```
 
 With the lambda chosen, we can create the model with from which we are going to get our test RMSE. Figure \@ref(fig:rr-var-import), shows not only that model (the one at the dotted line) but also the growth of the model as the penalty error term gradually decreases. We have also highlighted the eight most impactful variables, and we can see the exact values of their coefficients in Table \@ref(tab:lr-coefs). As a note, these coefficients have been standardized, and so are not reflective of absolute values of their respective features.
 
-```{r lr-coefs, echo=FALSE, message = FALSE}
-source("../code/functions/plot_glmnet.R")
-load("../results/ridge_fit.RData")
-dummified_train <- as.data.frame(model.matrix( ~ .-1, training))
-extract_std_coefs(ridge_fit, dummified_train) %>% 
-  arrange(desc(abs(coefficient))) %>% 
-  slice(1:8) %>% 
-  kable(format = "latex", 
+```{r lr-coefs, echo=FALSE, message = FALSE, warning = FALSE}
+load("../results/lr_std_coefs.RData")
+std_coefs %>% 
+  slice(1:8) %>%
+  kable(format = "latex", row.names = NA,
       booktabs = TRUE, digits = 2,
-      caption = "Ridge Regression Coefficients") %>%
+      caption = "Ten Highest Correlations With the Response Variable") %>%
   kable_styling(position = "center", latex_options = "HOLD_position")
 ```
+
+
 It should come as no surprise that attendance rate is the most important coefficient (by a wide margin too). Even in the exploratory data analysis, we noted that attendance rate was highly correlated with graduation rate. That it has such a large impact, even with ridge penalty, shows just how important the feature is to the model. The rest of the top eight features, however, were less noticed in our early data exploration. The second high feature is percent of students with disabilities. This makes sense (it is harder to do school with a disability), but it is disappointing to see it make such a high difference. Having more people who need to learn English leading to lower graduations rates is similarly expected but disappointing. Surprisingly, the state/local spending more money on a school indicates a lower graduation rate. This is a rather confusing result. In the early data exploration, we did note that federal expenditure was also negatively correlated, but that was on its own. This model should account for the confounding variables that could have led to the federal expenditure result. Perhaps, though this is part of the problem. The model could have a multicolinearity problem with multiple other variables correlating enough with per pupil state/local expenditures to return this unintuitive result. The rest of the variables, however, don't seem to have this problem with relatively intuitive explanations. For example, suspensions increasing meaning lower graduation comes as no surprise to anyone.
 
 It is important to remember the purpose of the linear ridge regression model. It serves as our baseline for the more advanced models. To that end, it will be interesting to see if the variables in this model remain impactful in others or if they were merely an idiosyncrasy of linear ridge regressions. It will also be interesting to compare the test error of linear ridge regressions with other regressions.
@@ -197,13 +196,13 @@ Random forests represent one tree-based model that have been shown to perform ex
 
 Moreover, there are methods of tuning the random forest to build better random forests that are catered to our data. Although random forests have low interpretability compared to some tree-based models, it measures variable importance which is valuable for our purposes in learning the most important factors for school graduation rates.  
 
-```{r rftuning, fig.cap = "Tuning the value for m in a random forest model", fig.align='center', echo = FALSE}
+```{r rftuning, fig.cap = "Tuning the value for m in a random forest model", fig.align='center', echo = FALSE, fig.pos="H"}
 knitr::include_graphics("../results/rf_tuning.png")
 ```
 
 We tuned our random forest models based on variable m: the subset of features at each split point of the tree. By tuning against out-of-bag error, we determine an optimal m-value, as shown in Figure \@ref(fig:rftuning). The value that minimized the OOB error was 3, which is lower than the default m value of 10. With this tuned parameter, we are able to build a better random forest, and this random forest when checked against number of trees to ensure had an out-of-bag error that was stabilized. 
 
-```{r rfimportance, fig.width = 7, fig.height= 6, out.width= "80%", fig.cap = "Plot of the variable importance using the purity based importance (on the right) and the OOB prediction based importance (on the left).", fig.align='center', echo = FALSE}
+```{r rfimportance, fig.width = 7, fig.height= 6, out.width= "80%", fig.cap = "Plot of the variable importance using the purity based importance (on the right) and the OOB prediction based importance (on the left).", fig.align='center', echo = FALSE, fig.pos="H"}
 knitr::include_graphics("../results/rf_importance.png")
 ```
 Then, we calculate the levels of variable importance using the tuned random forest as shown in Figure \@ref(fig:rfimportance). The clear most important variable in this random forest is the attendance rate of students at the school. This variable has a much higher value than the rest on both measures of importance, indicating that it is incredibly important to the model and calculating graduation rates. This makes sense because attendance is important to doing well in school, so schools with higher attendance rates tended to have more students perform better and graduate.
@@ -227,7 +226,7 @@ read_tsv("../results/data_importance.tsv") %>%
 ### Boosting
 Boosting (gradient boosting) is another powerful tree-based method that we will be building based on these New York high schools graduation rates. This method is known for building great models and models that are better than even random forests. It also works well with continuous response variables, such as the graduation rate in our case. The model also reveals which variables are most important in determining graduation rate, as well as partial dependence plots to go alongside. So, we use boosting in order to build a model that will have great predictive power for graduation rates and will also highlight the important variables that we must consider. 
 
-```{r gbmtune, fig.cap = "The cross-validation error is plotted against the number of trees for the gradient boosting method.", fig.align='center', echo = FALSE}
+```{r gbmtune, fig.width = 4, fig.height= 3, out.width= "60%", fig.cap = "The cross-validation error is plotted against the number of trees for the gradient boosting method.", fig.align='center', echo = FALSE, fig.pos="H"}
 knitr::include_graphics("../results/gbm_cv_error.png")
 ```
 
@@ -244,7 +243,7 @@ read_tsv("../results/gbm_importance.tsv") %>%
   kable_styling(position = "center")
 ```
 
-```{r partialdependence, fig.cap = "The partial dependence plot of the three most important variables in the boosting model.", fig.align='center', echo = FALSE}
+```{r partialdependence, fig.cap = "The partial dependence plot of the three most important variables in the boosting model.", fig.align='center', echo = FALSE, fig.pos="H"}
 knitr::include_graphics("../results/partial_dependence.png")
 ```
 

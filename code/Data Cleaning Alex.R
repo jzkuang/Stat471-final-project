@@ -7,9 +7,7 @@ accountability_filtered <- accountability %>%
   filter(YEAR == "2019") %>%
   filter(is.na(OVERRIDE)) %>% #remove values where overall status was overriden 
   select(ENTITY_CD, OVERALL_STATUS)
-
 write.csv(accountability_filtered, "Stat-471-final-project/cleaned data/Accountability.csv", row.names = FALSE)
-
 
 #BOCES is a program of shared educational services provided to school districts. Should we keep this???
 #Need index = Need-to-Resource Capacity Category. The need/resource capacity index, a measure of a district's ability to meet the needs of its students with local
@@ -20,7 +18,6 @@ BOCES_filtered <- BOCES %>%
   filter(YEAR == "2019") %>%
   select(ENTITY_CD, BOCES_CD, NEEDS_INDEX)
 write.csv(BOCES_filtered, "Stat-471-final-project/cleaned data/BOCES.csv", row.names = FALSE)
-
 
 #amount of money spent on the school
 expenditure <- readxl::read_excel("Stat471-final-project/data/Expenditures per Pupil.xlsx")

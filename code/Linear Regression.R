@@ -37,7 +37,8 @@ print(plot_glmnet(ridge_fit, dummified_train, features_to_plot = 8))
 dev.off()
 
 # Largest Coef
-extract_std_coefs(ridge_fit, dummified_train)
+std_coefs <- extract_std_coefs(ridge_fit, dummified_train)
+save(std_coefs, file = "Stat-471-final-project/results/lr_std_coefs.RData")
 
 #### Check the MSE for Training ####
 nyschool_test = read_csv("Stat-471-final-project/cleaned data/final data/nyschool_test.csv") %>% 
